@@ -20,6 +20,9 @@ export default {
   delete (row, url) {
     return fetch(url, row)
   },
+  customOperate (row, url = '') {
+    return fetch(url, row)
+  },
   getDetail (row, url) {
     return fetch(url, row)
   },

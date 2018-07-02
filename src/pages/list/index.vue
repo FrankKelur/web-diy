@@ -7,7 +7,7 @@
     b-search-table(:optHandler='optHandler' :rdata="rdata" :url="pageInfo.listUrl" ref="table" v-if="!switching&&pageInfo.listUrl" :params="{pid:pageInfo.pid}")
 
     component(:is="visible.dialog" :currRow="currRow" :rdata="rdata" :visible="visible"
-      :pageInfo="pageInfo" :formItems="formItems" @refresh="refresh" :table='table' @get-table-data='getTableData')
+    :pageInfo="pageInfo" :formItems="formItems" @refresh="refresh" :table='table' @get-table-data='getTableData')
 </template>
 
 <script>
@@ -43,8 +43,7 @@
         }
       }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
       editConfig () {
         this.$router.push({path: `/admin/editor?page=${this.page}`})
@@ -67,7 +66,13 @@
               op.validator = res.info.deleteValidator
             }
           })
-          this.rdata.operateOpts.push(...operations.map(item => ({label: item.label, validator: item.validator, auth: 'customOperate', operation: item})))
+          this.rdata.operateOpts.push(...operations.map(item => ({
+            url: item.url,
+            label: item.label,
+            validator: item.validator,
+            auth: 'customOperate',
+            operation: item
+          })))
           cb && cb()
         })
       },
@@ -110,6 +115,7 @@
         })
       },
       customOperate (row, op) {
+        console.log('row, op', op)
         this.currRow = row
         service.customOperate(row, op.url).then(res => {
           if (res.re) {

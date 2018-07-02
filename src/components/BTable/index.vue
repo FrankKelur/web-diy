@@ -209,9 +209,9 @@
           return field
         }
       },
-      handleCommand (command, row, op) {
-        var rdata = Object.assign(this.rdata, this.rdata.operateOpts.find(opt => opt.auth === command)[command])
-        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, rdata, op)
+      handleCommand (command, row) {
+        var op = this.rdata.operateOpts.find(opt => opt.auth === command)
+        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, op)
       },
       handleSizeChange () {
 //        this.searchData = this.searchDataBak
