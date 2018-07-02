@@ -1,13 +1,14 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
-import list from '@/pages/list'
-import editor from '@/pages/editor'
-import audit from '@/pages/audit'
-import sign from '@/pages/sign'
-import workflow from '@/pages/workflow'
-import adminLayout from '@/layout/admin'
 import { getLoginStatus, lang } from 'common/js/Utils'
 import { MessageBox } from 'element-ui'
+const editor = () => import('@/pages/editor')
+const list = () => import('@/pages/list')
+const audit = () => import('@/pages/audit')
+const sign = () => import('@/pages/sign')
+const workflow = () => import('@/pages/workflow')
+const adminLayout = () => import('@/layout/admin')
 
 Vue.use(Router)
 

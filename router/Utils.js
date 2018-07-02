@@ -6,15 +6,12 @@ const dbName = 'web-diy'
 
 module.exports = {
   connect () {
-    return new Promise((resolve) => {
-      if (global._dbo && global._db) {
-        resolve({db: global._db, dbo: global._dbo})
-      }
+    return new Promise((resolve, reject) => {
       MongoClient.connect(uri, (err, db) => {
-        if (err) throw err
+        if (err) {
+          reject(err)
+        }
         var dbo = db.db(dbName)
-        global._db = db
-        global._dbo = dbo
         resolve({db, dbo})
       })
     })

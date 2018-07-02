@@ -232,7 +232,7 @@ export default {
     })
   },
   getRenderDataSync (params) {
-    return lang[params.page]
+    return JSON.parse(JSON.stringify(lang[params.page]))
   },
   getRenderData (params) {
     // var text = JSON.parse(localStorage.getItem('text') || '{}')

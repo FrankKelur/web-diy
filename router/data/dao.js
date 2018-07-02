@@ -5,9 +5,13 @@ module.exports = {
     return new Promise(resolve => {
       Utils.connect().then(({db, dbo}) => {
         dbo.collection('data').find({pid}).toArray((err, rows) => {
+          db.close()
           if (err) throw err
           resolve(rows)
         })
+      }).catch(err => {
+        console.error('dao', err)
+        resolve([])
       })
     })
   },
@@ -15,6 +19,7 @@ module.exports = {
     return new Promise(resolve => {
       Utils.connect().then(({db, dbo}) => {
         dbo.collection('data').deleteOne({rid}, (err) => {
+          db.close()
           if (err) throw err
           resolve(true)
         })
@@ -25,6 +30,7 @@ module.exports = {
     return new Promise(resolve => {
       Utils.connect().then(({db, dbo}) => {
         dbo.collection('data').find({rid}).limit(1).toArray((err, rows) => {
+          db.close()
           if (err) throw err
           resolve(rows[0])
         })
@@ -35,6 +41,7 @@ module.exports = {
     return new Promise(resolve => {
       Utils.connect().then(({db, dbo}) => {
         dbo.collection('data').insertOne(row, (err) => {
+          db.close()
           if (err) throw err
           resolve(true)
         })
@@ -46,6 +53,7 @@ module.exports = {
     return new Promise(resolve => {
       Utils.connect().then(({db, dbo}) => {
         dbo.collection('data').updateOne({rid: row.rid}, {$set: row}, (err) => {
+          db.close()
           if (err) throw err
           resolve(true)
         })

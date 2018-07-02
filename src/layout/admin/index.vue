@@ -18,8 +18,8 @@
     data () {
       return {
         config: {
-          layout: '',
-          theme: '',
+          layout: 'vertical',
+          theme: 'default',
           colors: [],
           text: {}
         },
@@ -45,8 +45,8 @@
         })
       }
     },
-    async mounted () {
-      await this.getConfig()
+    mounted () {
+      this.getConfig()
     },
     components: {
       adminNav,

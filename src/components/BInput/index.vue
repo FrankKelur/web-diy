@@ -4,6 +4,8 @@
 
     //b-icon.icon(icon-name="preview" , @click="togglePassword" , :class="{'theme-color-A':inputStatus , 'theme-color-D':!inputStatus }")
   el-input.b-input(:value="model", :placeholder='placeholder', :class="inputCls", v-else, :rows="rows", :type="cType", :disabled="disabled", @input='changeHandle', :size="size")
+    template(slot="append")
+      slot(name="append")
 
 </template>
 

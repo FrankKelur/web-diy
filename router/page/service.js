@@ -10,6 +10,10 @@ module.exports = {
     var res = await dao.getPage(pid)
     return res
   },
+  async deletePage (pid) {
+    var res = await dao.deletePage(pid)
+    return res
+  },
   async setPage (params, token) {
     var target = await dao.getPage(params.pid)
     var res = false

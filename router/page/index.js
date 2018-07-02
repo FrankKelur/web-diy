@@ -12,6 +12,12 @@ router.post('/detail', function (req, res) {
     res.json({re: '200', data: page})
   })
 })
+router.post('/delete', function (req, res) {
+  var {pid} = req.body
+  service.deletePage(pid).then(() => {
+    res.json({re: '200'})
+  })
+})
 router.post('/edit', function (req, res) {
   var params = req.body
   var {token} = req.cookies

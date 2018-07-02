@@ -12,10 +12,16 @@ router.post('/login', function (req, res) {
   var token = 'token_' + new Date().getTime()
   var {password, uid} = req.body
   var row = {password, uid, token}
-  console.log('row.uid', row.uid, row.params)
-  service.editUser(row).then(() => {
-    res.json({re: 200, token: token})
+  service.getUser(row).then(target => {
+    if (target.password === password) {
+      service.editUser(row).then(() => {
+        res.json({re: 200, token: token})
+      })
+    } else {
+      res.json({re: 401, msg: 'uid, password no match'})
+    }
   })
+
 })
 router.post('/logout', function (req, res) {
   var {token} = req.cookies

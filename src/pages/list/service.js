@@ -4,7 +4,7 @@ import configService from '../../layout/admin/service'
 
 export default {
   getRenderDataSync (params) {
-    return lang[params.page]
+    return JSON.parse(JSON.stringify(lang[params.page]))
   },
   getRenderData (params) {
     return configService.getConfig().then(({data: {text}}) => {

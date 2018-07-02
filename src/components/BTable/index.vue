@@ -23,12 +23,12 @@
 
       el-table-column(:label="rdata.operation" align='center' v-if="rdata.operateOpts && rdata.operateOpts.length")
         template(slot-scope="scope")
-          a.link.theme-color-A.pointer(v-if="computedOpts.length==1", @click="handleCommand(computedOpts[0].auth, scope.row)") {{computedOpts[0].label}}
+          a.link.theme-color-A.pointer(v-if="computedOpts.length==1", @click="handleCommand(computedOpts[0].auth, scope.row, computedOpts[0])") {{computedOpts[0].label}}
           el-dropdown.theme-color-lightenC32.theme-color-lightenA10-hover.theme-color-darkenA10-active(@command="handleCommand" trigger='click', v-if="computedOpts.length > 1")
             span.el-dropdown-link
               b-icon.pointer(iconName="operation")
             el-dropdown-menu.ipt-class.theme-bg-H(slot="dropdown")
-              el-dropdown-item.theme-bg-lightenD12-hover.theme-color-C.theme-color-C-hover(:command='op.auth' v-for="op in computedOpts" v-text="op.label", :key='op.auth', :disabled="op.authStatus==='disabled'")
+              el-dropdown-item.theme-bg-lightenD12-hover.theme-color-C.theme-color-C-hover(:command='op.auth' v-for="op in computedOpts" v-text="op.label", :key='op.auth', v-if="opValidate(op, scope.row)")
 
     .batch-operate(v-if="rdata.multipleSelect")
       slot(name="batchOperate", :total="pagination.total")
@@ -127,6 +127,14 @@
       }
     },
     methods: {
+      opValidate (op, row) {
+        if (op.validator) {
+          console.log('op.validator', op.validator)
+          /* eslint-disable */
+          return eval(op.validator)
+        }
+        return true
+      },
       headerRenderFun (h, {column, $index}) {
         var col = this.computedHeaderCols[$index]
         var element = [h('span', {
@@ -201,9 +209,9 @@
           return field
         }
       },
-      handleCommand (command, row) {
+      handleCommand (command, row, op) {
         var rdata = Object.assign(this.rdata, this.rdata.operateOpts.find(opt => opt.auth === command)[command])
-        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, rdata)
+        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, rdata, op)
       },
       handleSizeChange () {
 //        this.searchData = this.searchDataBak

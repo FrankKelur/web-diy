@@ -270,7 +270,7 @@ var defaultXML = `<?xml version="1.0" encoding="UTF-8"?>
 
 export default {
   getRenderDataSync (params) {
-    return lang[params.page]
+    return JSON.parse(JSON.stringify(lang[params.page]))
   },
   getRenderData (params) {
     return configService.getConfig().then(({data: {text}}) => {

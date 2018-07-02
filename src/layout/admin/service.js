@@ -5,7 +5,7 @@ export default {
     return colorsList
   },
   getRenderDataSync (params) {
-    return lang[params.page]
+    return JSON.parse(JSON.stringify(lang[params.page]))
   },
   logout (params = {}, url = '/api/user/logout') {
     // return Promise.resolve({re: 200})
@@ -16,7 +16,7 @@ export default {
   },
   // api
   getRenderData (page, text) {
-    return Object.assign(lang[page], text[page])
+    return Object.assign(JSON.parse(JSON.stringify(lang[page])), text[page])
   },
   getText () {
     return Promise.resolve(JSON.parse(localStorage.getItem('text')))
@@ -29,13 +29,12 @@ export default {
     return fetch(url, params)
   },
   getConfig (params = {}, url = '/api/config/detail') {
-    return fetch(url + '?key=' + new Date().getTime(), params).then(res => {
-      console.log('getConfig res', res)
+    return fetch(url, params).then(res => {
       res.data = res.data || {
         layout: 'horizontal',
         theme: 'default',
         colors: colorsList[2],
-        text: lang
+        text: JSON.parse(JSON.stringify(lang))
       }
       return res
     })

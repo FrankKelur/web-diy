@@ -2,7 +2,7 @@ import { lang, fetch } from 'common/js/Utils'
 
 export default {
   getRenderDataSync (params) {
-    return lang[params.page]
+    return JSON.parse(JSON.stringify(lang[params.page]))
   },
   getRenderData (page, text) {
     return Object.assign(lang[page], text[page])

@@ -31,7 +31,7 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const queen = new Set()
+// const queen = new Set()
 // const basicUrl = 'http://localhost:3000'
 const basicUrl = process.env.backend_url
 const func = (url, parameters, option) => {
@@ -39,12 +39,12 @@ const func = (url, parameters, option) => {
     url = basicUrl + url
   }
   return new Promise((resolve, reject) => {
-    let key = url + JSON.stringify(parameters)
+    // let key = url + JSON.stringify(parameters)
     // 防止重复请求
-    if (queen.has(key)) {
-      return Promise.reject(new Error('duplicate request error...'))
-    }
-    queen.add(key)
+    // if (queen.has(key)) {
+    //   return Promise.reject(new Error('duplicate request error...'))
+    // }
+    // queen.add(key)
     const params = Object.assign({}, {
       credentials: 'include',
       method: 'POST',
@@ -54,7 +54,7 @@ const func = (url, parameters, option) => {
     }, option)
 
     fetch(url, params).then(response => {
-      queen.delete(key)
+      // queen.delete(key)
       if (response.ok) {
         return _returnContentByType(response)
       } else {

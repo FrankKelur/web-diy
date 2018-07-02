@@ -1,8 +1,10 @@
 <template lang="pug">
   .form-set
-    el-row(:gutter="10").oper-container.clear-float.theme-border-D
-      el-col(:span="3", :offset='21')
+    el-row(:gutter="10" type="flex" justify='end').oper-container.clear-float.theme-border-D
+      el-col(:span="3")
         b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{rdata.save}}
+      el-col(:span="3" v-if="page")
+        b-button(@click='deletePage' v-ellipsis-title="") {{rdata.delete}}
     .content.theme-bg-H
       .left.draggable-item-container
         .title.theme-color-A {{rdata.controlBase}}
@@ -33,14 +35,26 @@
                 b-input(:model.sync="auditInfo.name", :placeholder="rdata.pleaseInput")
               el-form-item(prop="pid", :label="rdata.pageId")
                 b-input(:model.sync="auditInfo.pid", :placeholder="rdata.pleaseInput")
-              el-form-item(prop="listUrl", label="List Url")
+              el-form-item(prop="listUrl", :label="rdata.listUrl")
                 b-input(:model.sync="auditInfo.listUrl", :placeholder="rdata.pleaseInput")
-              el-form-item(prop="deleteUrl", label="Delete Url")
-                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="rdata.pleaseInput")
-              el-form-item(prop="detailUrl", label="Detail Url")
+              .form-item-title.theme-color-D {{rdata.operations}}
+              el-form-item(prop="detailUrl", :label="rdata.detailUrl")
                 b-input(:model.sync="auditInfo.detailUrl", :placeholder="rdata.pleaseInput")
-              el-form-item(prop="editUrl", label="Edit Url")
+              el-form-item(prop="deleteUrl", :label="rdata.deleteUrl")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="rdata.pleaseInput")
+                b-input(:model.sync="auditInfo.deleteValidator", :placeholder="rdata.validator" type="textarea" :rows="4")
+              el-form-item(prop="editUrl", :label="rdata.editUrl")
                 b-input(:model.sync="auditInfo.editUrl", :placeholder="rdata.pleaseInput")
+                b-input(:model.sync="auditInfo.editValidator", :placeholder="rdata.validator" type="textarea" :rows="4")
+              el-form-item(v-for='(item, key) in auditInfo.operations' :label="item.label" :key="key")
+                b-input(:model.sync="item.url", :placeholder="rdata.pleaseInput")
+                b-input(:model.sync="item.validator", :placeholder="rdata.validator" type="textarea" :rows="4")
+              el-form-item
+                template(slot="label")
+                  b-input(:placeholder="rdata.newOperationLabel", :model.sync="newOperation.label")
+                b-input(:placeholder="rdata.newOperationUrl", :model.sync="newOperation.url")
+                  b-icon.theme-color-C.theme-color-E-hover(iconName='message_success', @click.native="addOperation" slot="append")
+                //b-icon.theme-color-C.theme-color-G-hover(iconName='message_failure', @click.native="clearOperation")
           el-tab-pane(name="2", :label="rdata.controlSet")
             form-item-set(v-for="(item, $index) in formItems",:key='$index', v-show="currItem==item", :item="item", :rdata="rdata", :allFormItems="formItems", ref="formItemSet")
 
@@ -67,9 +81,17 @@
         rdata: service.getRenderDataSync({page: 'editor'}),
         formSet: {},
         currItem: {},
+        newOperation: {
+          label: '',
+          validator: '',
+          url: ''
+        },
         auditInfo: {
           pid: pid,
+          editValidator: '',
+          deleteValidator: '',
           name: '',
+          operations: [],
           'listUrl': '/api/data/list?page=' + pid,
           'detailUrl': '/api/data/detail?page=' + pid,
           'deleteUrl': '/api/data/delete?page=' + pid,
@@ -291,6 +313,13 @@
       }
     },
     methods: {
+      addOperation () {
+        this.auditInfo.operations.push(Object.assign({}, this.newOperation))
+        this.clearOperation()
+      },
+      clearOperation () {
+        this.newOperation = {url: '', label: '', validator: ''}
+      },
       getRules (item) {
         var res = (item.rules || []).reduce((res, ruleItem) => {
           var rule = constants.ruleMap[ruleItem]
@@ -348,6 +377,25 @@
       },
       validateForm () {
         this.$refs['tmpForm'].validate()
+      },
+      deletePage () {
+        this.$alert(this.rdata.deleteMSG, this.rdata.delete, {
+          confirmButtonText: this.rdata.confirm,
+          callback: action => {
+            if (action === 'confirm') {
+              var params = {
+                pid: this.page
+              }
+              service.deletePage(params).then(res => {
+                if (res.re === '200') {
+                  this.$message.success(this.rdata.operateSuccess)
+                  window.location.href = '/#/admin/editor'
+                  window.location.reload()
+                }
+              })
+            }
+          }
+        })
       },
       saveEnable () {
         var valid = true
@@ -542,6 +590,10 @@
         display: inline-block;
         vertical-align: top;
         flex-grow: 1;
+        .form-item-title {
+          margin-bottom: 20px;
+          font-weight: bold;
+        }
         .form-info {
           .el-form-item__label {
             width: 30%;

@@ -17,6 +17,11 @@ router.post('/delete', function (req, res) {
     res.json({re: 200})
   })
 })
+router.post('/customOperate', function (req, res) {
+  var row = req.body
+  console.log('customOperate row', row)
+  res.json({re: 200})
+})
 router.post('/detail', function (req, res) {
   var row = req.body
   service.getDataDetail(row).then(target => {

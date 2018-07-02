@@ -1,7 +1,23 @@
 /* eslint-disable */
 var struct = {
   editor: {
+    'validateUrl': '操作验证接口',
+    'editValidate': '编辑操作验证接口',
+    'deleteValidate': '删除操作验证接口',
+    'operations': '操作列表',
+    'validator': '请输入可操作验证回掉, eg:' +
+    '\nfunction (row) {' +
+    '\nreturn !!row.name' +
+    '\n}',
+    'newOperationUrl': '请输入新操作接口',
+    'newOperationLabel': '请输入新操作名称',
+    'customOperation': '自定义操作',
+    'detailUrl': '详情接口',
+    'listUrl': '列表接口',
+    'deleteUrl': '删除接口',
+    'editUrl': '编辑接口',
     'operateSuccess': '操作成功！',
+    'deleteMSG': '确定删除该页面？',
     'showAuth': '显示控制',
     'list': '列表',
     'inputField': '请输入字段名',
@@ -101,6 +117,7 @@ var struct = {
     'delete': '删除',
     'edit': '编辑',
     'operateSuccess': '操作成功',
+    'networkError': '网络错误！',
     'operation': '操作',
     'more': '更多',
     'headerCols': [],

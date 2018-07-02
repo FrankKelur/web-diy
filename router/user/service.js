@@ -13,6 +13,10 @@ module.exports = {
     }
     return res
   },
+  async getUser(row) {
+    var res = await dao.getUser(row.uid)
+    return res || {}
+  },
   async editUserByToken (token, row) {
     var res = await dao.editUserByToken(token, row)
     return res

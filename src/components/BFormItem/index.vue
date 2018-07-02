@@ -27,7 +27,7 @@
   import BUpload from 'components/BUpload'
   import BDatepicker from 'components/BDatepicker'
   import BInput from 'components/BInput'
-  import utils from 'common/js/Utils'
+  import * as utils from 'common/js/Utils'
 
   export default {
     name: 'b-form-item',

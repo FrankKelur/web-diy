@@ -36,6 +36,7 @@
           page: null
         },
         optHandler: {
+          customOperate: this.customOperate,
           edit: this.edit,
           detail: this.detail,
           delete: this.delete
@@ -43,12 +44,6 @@
       }
     },
     computed: {
-    },
-    created () {
-      var params = {page: 'list'}
-      service.getRenderData(params).then(res => {
-        Object.assign(this.rdata, res)
-      })
     },
     methods: {
       editConfig () {
@@ -58,15 +53,26 @@
         this.$refs['table'].search()
       },
       getTableConfig (cb) {
+        console.log('getTableConfig 1')
         service.getTableConfig(this.page).then(res => {
           this.rdata.searchFields = res.searchFields
           this.rdata.headerCols = res.headerCols
           this.formItems = res.formItems
           this.pageInfo = res.info
+          var operations = res.info.operations || []
+          this.rdata.operateOpts.forEach(op => {
+            if (op.auth === 'edit') {
+              op.validator = res.info.editValidator
+            } else if (op.auth === 'delete') {
+              op.validator = res.info.deleteValidator
+            }
+          })
+          this.rdata.operateOpts.push(...operations.map(item => ({label: item.label, validator: item.validator, auth: 'customOperate', operation: item})))
           cb && cb()
         })
       },
       reload () {
+        console.log('getTableConfig 2')
         this.page = this.$router.currentRoute.query.page
         this.getTableConfig(() => {
           this.switching = true
@@ -95,8 +101,23 @@
       delete (row) {
         this.currRow = row
         service.delete(row, this.pageInfo.deleteUrl).then(res => {
-          this.$message({type: 'success', message: this.rdata.operateSuccess})
-          this.refresh()
+          if (res.re) {
+            this.$message({type: 'success', message: this.rdata.operateSuccess})
+            this.refresh()
+          } else {
+            this.$message({type: 'error', message: this.rdata.networkError})
+          }
+        })
+      },
+      customOperate (row, op) {
+        this.currRow = row
+        service.customOperate(row, op.url).then(res => {
+          if (res.re) {
+            this.$message({type: 'success', message: this.rdata.operateSuccess})
+            this.refresh()
+          } else {
+            this.$message({type: 'error', message: this.rdata.networkError})
+          }
         })
       }
     },
@@ -109,7 +130,11 @@
       BSearchTable
     },
     mounted () {
-      this.getTableConfig()
+      var params = {page: 'list'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.rdata, res)
+        this.getTableConfig()
+      })
       window._listPage = this
     },
     watch: {
