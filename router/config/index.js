@@ -4,6 +4,7 @@ var service = require('./service')
 router.post('/edit', function (req, res) {
   var params = req.body
   var {token} = req.cookies
+  console.log('edit token:', token)
   service.setConfig(token, params).then(() => {
     res.json({re: 200})
   })

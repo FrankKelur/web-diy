@@ -6,6 +6,7 @@ export { default as validator } from './validator'
 export { default as API } from './API'
 export { default as lang } from './lang'
 export { default as colorsList } from './colors'
+export { default as FeedTmp } from './FeedTmp'
 
 function parserUrl (url) {
   var query = url.split('?')[1] || ''
@@ -32,4 +33,18 @@ function getOptionList () {
   return Promise.resolve([])
 }
 
-export { getLoginStatus, debounce, parserUrl, getOptionList }
+const eventHandler = {
+  redirect (data) {
+    window.location.pathname = data.params.toUrl
+  },
+  operateComponents (data) {
+    const target = data.target_components
+    for (let key in target) {
+      var comp = window.components[key]
+      var {action, params} = target[key]
+      comp && comp[action](params)
+    }
+  }
+}
+
+export { getLoginStatus, debounce, parserUrl, getOptionList, eventHandler }
