@@ -11,6 +11,11 @@ app.use('/', express.static('dist', {
   maxAge: 60 * 1000 * 1000,
   etag: false
 }))
+
+app.use('/static', express.static('static', {
+  maxAge: 60 * 1000 * 1000,
+  etag: false
+}))
 var authWhiteList = ['/user/login','/user/sign-up']
 var allowCrossDomain = function(req, res, next) {
   console.log('req.origin', req.headers.origin)
